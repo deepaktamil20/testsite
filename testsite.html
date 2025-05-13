@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Text Extractor</title>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1"></script>
+</head>
+<body>
+    <h1>Upload an Image to Extract Text</h1>
+
+    <!-- File input for image upload -->
+    <input type="file" id="imageInput" accept="image/*">
+    <br><br>
+
+    <!-- Button to start OCR -->
+    <button onclick="extractText()">Extract Text</button>
+
+    <h2>Extracted Text:</h2>
+    <pre id="output"></pre>
+
+    <script>
+        function extractText() {
+            // Get the selected image file
+            const imageInput = document.getElementById('imageInput');
+            const file = imageInput.files[0];
+
+            // Check if a file is selected
+            if (!file) {
+                alert('Please upload an image.');
+                return;
+            }
+
+            // Use Tesseract.js to perform OCR on the uploaded image
+            Tesseract.recognize(
+                file,
+                'eng', // Language code, here 'eng' for English
+                {
+                    logger: (m) => console.log(m) // Optional logger to track progress
+                }
+            ).then(({ data: { text } }) => {
+                // Display the extracted text
+                document.getElementById('output').textContent = text;
+            }).catch(err => {
+                // Handle errors
+                console.error('Error:', err);
+                alert('Error extracting text. Please try again.');
+            });
+        }
+    </script>
+</body>
+</html>
